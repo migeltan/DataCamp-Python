@@ -1,0 +1,14 @@
+#Pythonic Code 
+
+"""
+1. Use descriptive variable names
+2. Write modular code with functions and classes
+3. Follow PEP 8 style guidelines
+4. Leverage Python's predefined functions
+"""
+
+#List Comprehension
+# [expression for item in iterable if condition]
+#Create a list of squares
+squares = [x**2 for x in range(10)]
+print (squares)
