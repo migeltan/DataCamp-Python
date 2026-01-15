@@ -1,0 +1,78 @@
+#Python Basics
+#Basic Operators
+print (1+3)
+print (4 - 2)
+print (25 / 12 % 2)
+print (16 * 8)
+
+#Assigning variables
+height = 168
+weight = 61 
+
+bmi = height / weight ** 2
+print (bmi)
+
+#Data types
+type(bmi) #float
+type(5) #int
+type('STRING') #string
+type(True) #boolean
+print('ab' + 'cd')
+
+#Lists: arrays, tuple, 
+FAM = ["Migel", 1.68, "Angelo", 1.71]
+print (FAM)
+
+FAM2 = [["Miggy", 1.67,
+        "Michaela", 1.11]]
+print (FAM2)
+print (type(FAM))
+
+#Subnetting lists: Access through index, slice and indexing
+print(FAM[2], FAM[3])
+print(FAM2[0:2]) #start : end
+
+#List Manipulation
+FAM[1] = 1.69 #updating an info
+print(FAM)
+FAM[0:1] = ["Migel"]
+print(FAM)
+
+FAM + ["KIFFY", 1.70]
+FAM_EXT = FAM + ["KIFFY", 1.69] #adds
+del FAM[0] #deletes
+print (FAM)
+print(FAM_EXT)
+
+AUTONOMY = ["VAGINA", "PENIS", "ANUS"]
+BIOLOGY = AUTONOMY
+BIOLOGY [1] = "CLIT" #updates
+print(BIOLOGY)
+
+BIOLOGY = list(AUTONOMY)
+BIOLOGY = AUTONOMY[:]
+BIOLOGY [0] = "TESTES"
+print(BIOLOGY)
+
+
+
+
+""""
+hall = 11.25
+kit = 18.0
+liv = 20.0
+bed = 10.75
+bath = 9.50
+
+# House information as list of lists
+
+house = [["hallway", hall],
+         ["kitchen", kit],
+         ["living room", liv],
+         ["bedroom", bed],
+         ["bathroom", bath]]
+
+# Print out house
+print (house)
+"""
+
