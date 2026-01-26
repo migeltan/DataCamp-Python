@@ -17,8 +17,9 @@ print(np_2d.shape)
 print(np_2d[0][2]) #prints index that matrix
 print(np_2d[0, 2]) #same func
 
-#           rc r c
-print(np_2d[:, 1:3]) #blank trans to 0
+#           r   c
+print(np_2d[:, 1:3]) #basically slicing, row : means all, 
+#                     while 1:3 means column 1 to 3
 print(np_2d[1:, :]) #weight 1:0
 print(np_2d[:1, :]) #height
 
