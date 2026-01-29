@@ -1,8 +1,0 @@
-#Lists - ordered mutable collections that can hold varieties
-#of data types.
-
-numbers = [1,2,3,4]
-fruits = ["apple", "banana", "cherry"]
-mixed = [1, 2, 3, "true", false]
-
-print(numbers[2])
