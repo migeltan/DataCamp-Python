@@ -11,4 +11,15 @@ ans = 1
 for i in range(exp):
     ans = ans * base
 
-print(f"{base} to the power of {exp} is: {ans}")
+print(f"{base}^ {exp} is: {ans}")
+
+#using if
+result = 1
+if exp == 0:
+    result = 1
+elif exp > 0:
+    for i in range(exp):
+        result *= base
+else:
+    print("Enter non-negative numbers only!")
+print(f'{base}^ {exp} is: {result}')
