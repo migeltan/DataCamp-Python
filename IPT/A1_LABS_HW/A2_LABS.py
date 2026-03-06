@@ -12,3 +12,7 @@ for char in range(ord('a'), ord('z') + 1):
 print("\nDigits (0-9): ")
 for char in range(ord('0'), ord('9') + 1):
     print(chr(char), "=", char)
+
+print("\nSpecial Characters: ")
+for char in range(58, 65):
+    print(f"{chr(char)} = {char}")
