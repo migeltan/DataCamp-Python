@@ -22,4 +22,5 @@ elif exp > 0:
         result *= base
 else:
     print("Enter non-negative numbers only!")
-print(f'{base}^ {exp} is: {result}')
+print(f'In an if statement: {base}^ {exp} is: {result}')
+fsfsfsf
