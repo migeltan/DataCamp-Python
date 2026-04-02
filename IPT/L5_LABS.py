@@ -10,16 +10,18 @@ Attributes are defined in constructor method.
 class Bag:
     category = "Accessory"  # Class attribute (shared by all bags)
 
+    #constructor, defines attributes
     def __init__(self, name, brand, color, material, price, weight_kg, has_zipper):
         self.name = name
-        self.brand = brand
+        self.brand = brand #attributes
         self.color = color
         self.material = material
         self.price = price
         self.weight_kg = weight_kg
         self.has_zipper = has_zipper
 
-    def description(self):
+    #BEHAVIORS
+    def description(self): #instance method
         zipper_info = "with a zipper" if self.has_zipper else "without a zipper"
         return (
             f"[{self.brand}] {self.name} — {self.color} {self.material}, "
@@ -75,6 +77,7 @@ class AffordableBag(Bag):  # <-- "AffordableBag IS-A Bag" (inheritance)
         return f"💰 BUDGET-FRIENDLY | {base}"
 
     # NEW METHOD — calculates a simple value-for-money score
+                    #object reference
     def value_rating(self):
         score = round(10 - (self.price / 20), 1)  # cheaper = higher score
         score = max(0, min(score, 10))             # clamp between 0 and 10
@@ -89,6 +92,7 @@ class AffordableBag(Bag):  # <-- "AffordableBag IS-A Bag" (inheritance)
 
 # LuxuryBag instances (some marked as limited edition)
 # references the child - instantiation
+#instantiate the method
 bag1 = LuxuryBag("Satchel",      "Louis Vuitton", "Brown", "Leather",         1500.00, 0.4, True)
 bag2 = LuxuryBag("Backpack",     "Guess",         "Black", "Vegan Leather",    850.00, 0.5, True)
 bag3 = LuxuryBag("Crossbody Bag","Coach",         "Red",   "Leather",          950.00, 0.4, True)
@@ -116,10 +120,14 @@ print("=" * 65)
 
 print("\n--- All Bags (description inherited + overridden) ---")
 for bag in all_bags:
+    #instance method
+    #defines behavior
+                        #no parameter
     print(bag.description())  # each class runs its OWN version of description()
 
 print("\n--- Authenticity Notes (LuxuryBag-only method) ---")
 for bag in luxury_bags:
+    #obejct then method
     print(bag.authenticity_note())  # only LuxuryBag has this
 
 print("\n--- Value Ratings (AffordableBag-only method) ---")
