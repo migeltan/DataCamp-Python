@@ -28,7 +28,7 @@ FAM2 = [["Miggy", 1.67,
 print (FAM2)
 print (type(FAM))
 
-#Subnetting lists: Access through index, slice and indexing
+#Subsetting lists: Access through index, slice and indexing
 print(FAM[2], FAM[3])
 print(FAM2[0:2]) #start : end
 
