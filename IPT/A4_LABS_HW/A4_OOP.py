@@ -23,6 +23,7 @@ class Bag:
         else:
             return f"Aww... The {self.name} by {self.brand} exceeds your ${budget} budget."
 
+#objects
 bag1 = Bag("Satchel", "Louis Vuitton", "Brown", "Leather", 1500.00, 0.4, True)
 bag2 = Bag("Backpack", "Guess", "Black", "Vegan Leather", 850.00, 0.5,True)
 bag3 = Bag("Crossbody Bag", "Coach", "Red", "Leather",   950.00, 0.4, True)
