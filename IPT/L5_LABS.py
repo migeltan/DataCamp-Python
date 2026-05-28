@@ -83,7 +83,6 @@ class AffordableBag(Bag):  # <-- "AffordableBag IS-A Bag" (inheritance)
         score = max(0, min(score, 10))             # clamp between 0 and 10
         return f"Value Rating for {self.name}: {score}/10"
 
-
 # ============================================================
 # OBJECTS — now using the appropriate child class
 # LuxuryBag and AffordableBag both inherited description() and
