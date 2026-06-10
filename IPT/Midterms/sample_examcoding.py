@@ -1,5 +1,6 @@
 #PROBLEM 1
 userinp = []
+
 for i in range(5):
     inp = int(input("Enter 5 numbers: "))
     userinp.append(inp)

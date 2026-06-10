@@ -1,0 +1,60 @@
+LABELENCODER - BAYESIAN
+30% * 20%
+MODEL - RESULT OF TRAINING SET
+
+OUTLOOK - 0(OVRRCAST) 1(MILD) 2(SUNNY)
+COOL0 HOT1 MILD2
+HIGH0 NORMAL1
+WEAK0 STRONG1
+
+Data Preprocessing in Data Mining:
+1. Real data contains missing and incorrect values
+2. Data may come from multiple sources
+3. Large datasets often have irrelevant information
+4. Clean data fives better mining results
+
+Steps in Data Preprocessing:
+Data Cleaning -> Data Integration -> Data Transformaiton -> Data Reduction
+
+1. Data Cleaning - Process of identifying and correcting errors or
+inconsistencies in the datasets. Its common tasks include:
+- Handling missing values
+- Removing duplicate records
+- Correcting wrong or inconsistent data
+- Handling outliers
+
+Techniques:
+- Mean Imputation - Replaces missin values with the average of the attribute
+- Meadiam Imputation - Replaces missing values with the middle value useful when outliers exist.
+- Mode Imputation - Replaces missing values with the most frequent value/
+- Deletion Method
+
+2. Data Integration - It invloves data from various sources into a single, unified dataset.
+It can be challenging due to differences in data format,s structures, and meanings.
+- Used when data comes from databases, files, or APIS
+- removes redundancy between datasets
+- Resolves conflicts in data values 
+
+3. Data Transformation - Converts data into a suitable form so that data mining
+algorithms can work effectively.
+- Bring data into a common format.
+- Improve mining efficiency 
+- Make data suitable for modeling.
+
+One hot encoding - 1 0
+Label Encoding - Assigns numeric labels to categorical values.
+
+4. Data Reduction - it reduces dataset's size while maintaining key information.
+this can be done through feature selection which chooses the most relevant features
+and feature extraction which transforms the data into a lower-dimensional space
+while preserving important details.
+- Improves processing speed
+- Saves storage space
+- Make analysis easier.
+*deletes columns, decrease size
+
+Seatwork:
+1. Apply imputation on empty values.
+2. Build a model out of 14 records
+
+

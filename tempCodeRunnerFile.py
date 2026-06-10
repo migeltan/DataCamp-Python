@@ -1,1 +1,0 @@
-print("First 5 records:", df.head())

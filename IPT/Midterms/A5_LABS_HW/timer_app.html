@@ -1,0 +1,271 @@
+
+<style>
+  .timer-wrap { padding: 2rem 1rem; max-width: 400px; margin: 0 auto; text-align: center; }
+  .mode-tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 2rem; }
+  .tab { padding: 6px 20px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-secondary); font-size: 14px; cursor: pointer; transition: all 0.15s; }
+  .tab.active { background: var(--color-background-secondary); color: var(--color-text-primary); border-color: var(--color-border-primary); font-weight: 500; }
+  .clock-face { position: relative; width: 220px; height: 220px; margin: 0 auto 2rem; }
+  svg.ring { width: 220px; height: 220px; transform: rotate(-90deg); }
+  .track { fill: none; stroke: var(--color-border-tertiary); stroke-width: 6; }
+  .progress { fill: none; stroke-width: 6; stroke-linecap: round; transition: stroke-dashoffset 0.5s linear, stroke 0.3s; }
+  .time-display { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 44px; font-weight: 500; letter-spacing: -1px; color: var(--color-text-primary); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .time-display.running { color: var(--color-text-primary); }
+  .time-display.done { color: #D85A30; }
+  .inputs { display: flex; gap: 8px; justify-content: center; margin-bottom: 1.5rem; }
+  .time-input { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+  .time-input label { font-size: 11px; color: var(--color-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; }
+  .time-input input { width: 64px; text-align: center; font-size: 22px; font-weight: 500; padding: 8px 4px; border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); background: var(--color-background-secondary); color: var(--color-text-primary); }
+  .time-input input:focus { outline: none; border-color: var(--color-border-primary); }
+  .sep { font-size: 28px; font-weight: 500; color: var(--color-text-tertiary); align-self: flex-end; padding-bottom: 10px; }
+  .controls { display: flex; gap: 10px; justify-content: center; }
+  .btn { padding: 10px 28px; border-radius: var(--border-radius-md); border: 0.5px solid var(--color-border-secondary); background: transparent; color: var(--color-text-primary); font-size: 15px; cursor: pointer; transition: background 0.12s, transform 0.08s; }
+  .btn:hover { background: var(--color-background-secondary); }
+  .btn:active { transform: scale(0.97); }
+  .btn.primary { background: var(--color-background-secondary); font-weight: 500; }
+  .btn.reset { color: var(--color-text-secondary); }
+  .laps { margin-top: 1.5rem; text-align: left; max-height: 160px; overflow-y: auto; }
+  .lap-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 0.5px solid var(--color-border-tertiary); font-size: 13px; color: var(--color-text-secondary); font-variant-numeric: tabular-nums; }
+  .lap-row:last-child { border-bottom: none; }
+  .lap-label { color: var(--color-text-tertiary); }
+  .status-msg { font-size: 13px; color: #D85A30; min-height: 18px; margin-bottom: 10px; }
+</style>
+
+<div class="timer-wrap">
+  <h2 class="sr-only">Timer and stopwatch app</h2>
+  <div class="mode-tabs">
+    <button class="tab active" onclick="setMode('timer')">Timer</button>
+    <button class="tab" onclick="setMode('stopwatch')">Stopwatch</button>
+  </div>
+
+  <div class="status-msg" id="statusMsg"></div>
+
+  <div class="clock-face">
+    <svg class="ring" viewBox="0 0 220 220">
+      <circle class="track" cx="110" cy="110" r="97"/>
+      <circle class="progress" id="progressRing" cx="110" cy="110" r="97"
+        stroke="#1D9E75"
+        stroke-dasharray="609.7"
+        stroke-dashoffset="0"/>
+    </svg>
+    <div class="time-display" id="timeDisplay">00:00</div>
+  </div>
+
+  <div class="inputs" id="timerInputs">
+    <div class="time-input">
+      <label>hours</label>
+      <input type="number" id="inH" min="0" max="99" value="0" oninput="clampInput(this,99);syncDisplay()"/>
+    </div>
+    <div class="sep">:</div>
+    <div class="time-input">
+      <label>min</label>
+      <input type="number" id="inM" min="0" max="59" value="5" oninput="clampInput(this,59);syncDisplay()"/>
+    </div>
+    <div class="sep">:</div>
+    <div class="time-input">
+      <label>sec</label>
+      <input type="number" id="inS" min="0" max="59" value="0" oninput="clampInput(this,59);syncDisplay()"/>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn primary" id="startBtn" onclick="toggle()">Start</button>
+    <button class="btn reset" id="lapBtn" onclick="lapOrReset()">Reset</button>
+  </div>
+
+  <div class="laps" id="lapList"></div>
+</div>
+
+<script>
+let mode = 'timer';
+let running = false;
+let interval = null;
+let elapsed = 0;
+let total = 0;
+let lapCount = 0;
+let lastLap = 0;
+let animFrame = null;
+let startTs = null;
+let baseElapsed = 0;
+
+const CIRC = 2 * Math.PI * 97;
+const ring = document.getElementById('progressRing');
+const display = document.getElementById('timeDisplay');
+const startBtn = document.getElementById('startBtn');
+const lapBtn = document.getElementById('lapBtn');
+const statusMsg = document.getElementById('statusMsg');
+const timerInputs = document.getElementById('timerInputs');
+const lapList = document.getElementById('lapList');
+
+function clampInput(el, max) {
+  let v = parseInt(el.value) || 0;
+  if (v < 0) v = 0;
+  if (v > max) v = max;
+  el.value = v;
+}
+
+function getInputSeconds() {
+  const h = parseInt(document.getElementById('inH').value) || 0;
+  const m = parseInt(document.getElementById('inM').value) || 0;
+  const s = parseInt(document.getElementById('inS').value) || 0;
+  return h * 3600 + m * 60 + s;
+}
+
+function syncDisplay() {
+  if (!running) {
+    if (mode === 'timer') {
+      const t = getInputSeconds();
+      display.textContent = fmt(t);
+      setRing(1);
+    }
+  }
+}
+
+function fmt(sec) {
+  sec = Math.max(0, Math.round(sec));
+  const h = Math.floor(sec / 3600);
+  const m = Math.floor((sec % 3600) / 60);
+  const s = sec % 60;
+  if (h > 0) return `${pad(h)}:${pad(m)}:${pad(s)}`;
+  return `${pad(m)}:${pad(s)}`;
+}
+
+function fmtMs(ms) {
+  const s = Math.floor(ms / 1000);
+  const cs = Math.floor((ms % 1000) / 10);
+  const h = Math.floor(s / 3600);
+  const m = Math.floor((s % 3600) / 60);
+  const ss = s % 60;
+  if (h > 0) return `${pad(h)}:${pad(m)}:${pad(ss)}.${pad(cs)}`;
+  return `${pad(m)}:${pad(ss)}.${pad(cs)}`;
+}
+
+function pad(n) { return String(n).padStart(2, '0'); }
+
+function setRing(ratio, color) {
+  const offset = CIRC * (1 - Math.max(0, Math.min(1, ratio)));
+  ring.style.strokeDashoffset = offset.toFixed(2);
+  if (color) ring.style.stroke = color;
+}
+
+function setMode(m) {
+  mode = m;
+  stop(true);
+  lapList.innerHTML = '';
+  lapCount = 0; lastLap = 0;
+  statusMsg.textContent = '';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  if (mode === 'timer') {
+    timerInputs.style.display = 'flex';
+    lapBtn.textContent = 'Reset';
+    display.className = 'time-display';
+    syncDisplay();
+  } else {
+    timerInputs.style.display = 'none';
+    lapBtn.textContent = 'Lap';
+    display.textContent = '00:00.00';
+    setRing(0, '#378ADD');
+  }
+}
+
+function toggle() {
+  if (!running) {
+    if (mode === 'timer') {
+      if (total === 0 || display.className.includes('done')) {
+        total = getInputSeconds() * 1000;
+        elapsed = 0;
+      }
+      if (total === 0) { statusMsg.textContent = 'Set a time above to start'; return; }
+      statusMsg.textContent = '';
+    }
+    running = true;
+    startBtn.textContent = 'Pause';
+    lapBtn.textContent = mode === 'timer' ? 'Reset' : 'Lap';
+    disableInputs(true);
+    startTs = performance.now();
+    tick();
+  } else {
+    running = false;
+    startBtn.textContent = 'Resume';
+    cancelAnimationFrame(animFrame);
+    if (mode === 'stopwatch') baseElapsed = elapsed;
+  }
+}
+
+function tick() {
+  if (!running) return;
+  const now = performance.now();
+  const delta = now - startTs;
+  if (mode === 'timer') {
+    const rem = Math.max(0, total - elapsed - delta);
+    display.textContent = fmt(rem / 1000);
+    setRing(rem / total, rem < total * 0.2 ? '#D85A30' : '#1D9E75');
+    if (rem <= 0) { done(); return; }
+  } else {
+    elapsed = baseElapsed + delta;
+    display.textContent = fmtMs(elapsed);
+    setRing((elapsed % 60000) / 60000, '#378ADD');
+  }
+  animFrame = requestAnimationFrame(tick);
+}
+
+function done() {
+  running = false;
+  cancelAnimationFrame(animFrame);
+  elapsed = total;
+  display.textContent = '00:00';
+  display.className = 'time-display done';
+  setRing(0, '#D85A30');
+  startBtn.textContent = 'Restart';
+  statusMsg.textContent = 'Time is up!';
+  disableInputs(false);
+  try { new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAA').play(); } catch(e){}
+}
+
+function stop(reset) {
+  running = false;
+  cancelAnimationFrame(animFrame);
+  startBtn.textContent = 'Start';
+  disableInputs(false);
+  if (mode === 'timer') {
+    total = getInputSeconds() * 1000;
+    elapsed = 0;
+    display.className = 'time-display';
+    syncDisplay();
+    setRing(1, '#1D9E75');
+    lapBtn.textContent = 'Reset';
+  } else {
+    if (reset) { elapsed = 0; baseElapsed = 0; }
+    display.textContent = fmtMs(elapsed);
+    setRing((elapsed % 60000) / 60000, '#378ADD');
+    lapBtn.textContent = 'Lap';
+  }
+  statusMsg.textContent = '';
+}
+
+function lapOrReset() {
+  if (mode === 'stopwatch' && running) {
+    lapCount++;
+    const lapTime = elapsed - lastLap;
+    lastLap = elapsed;
+    const row = document.createElement('div');
+    row.className = 'lap-row';
+    row.innerHTML = `<span class="lap-label">Lap ${lapCount}</span><span>${fmtMs(lapTime)}</span><span>${fmtMs(elapsed)}</span>`;
+    lapList.insertBefore(row, lapList.firstChild);
+  } else {
+    stop(true);
+    lapList.innerHTML = '';
+    lapCount = 0; lastLap = 0; baseElapsed = 0;
+  }
+}
+
+function disableInputs(v) {
+  ['inH','inM','inS'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.disabled = v;
+  });
+}
+
+syncDisplay();
+setRing(1, '#1D9E75');
+</script>

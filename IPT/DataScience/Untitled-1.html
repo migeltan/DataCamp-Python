@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COMP 014 Formula Cheat Sheet</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=Syne:wght@700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #16161a;
+    --border: #2a2a35;
+    --accent1: #7b5ea7;
+    --accent2: #4ecdc4;
+    --accent3: #ff6b6b;
+    --accent4: #ffd93d;
+    --text: #e8e8f0;
+    --muted: #888899;
+    --formula-bg: #1a1a24;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 32px 24px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  header h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    background: linear-gradient(135deg, var(--accent1), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  header p {
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    break-inside: avoid;
+  }
+
+  .card.full-width {
+    grid-column: 1 / -1;
+  }
+
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .card-title.purple { color: var(--accent1); border-color: var(--accent1)33; }
+  .card-title.teal   { color: var(--accent2); border-color: var(--accent2)33; }
+  .card-title.red    { color: var(--accent3); border-color: var(--accent3)33; }
+  .card-title.yellow { color: var(--accent4); border-color: var(--accent4)33; }
+
+  .formula-block {
+    background: var(--formula-bg);
+    border-left: 3px solid var(--accent1);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 8px 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .formula-block.teal  { border-color: var(--accent2); }
+  .formula-block.red   { border-color: var(--accent3); }
+  .formula-block.yellow{ border-color: var(--accent4); }
+
+  .formula-label {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 4px;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .formula {
+    color: #c8d8ff;
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .note {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-right: 4px;
+    font-weight: 600;
+  }
+
+  .tag.purple { background: var(--accent1)22; color: var(--accent1); }
+  .tag.teal   { background: var(--accent2)22; color: var(--accent2); }
+  .tag.red    { background: var(--accent3)22; color: var(--accent3); }
+  .tag.yellow { background: var(--accent4)22; color: var(--accent4); }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 8px;
+  }
+
+  th {
+    text-align: left;
+    color: var(--muted);
+    font-weight: 500;
+    padding: 4px 8px;
+    border-bottom: 1px solid var(--border);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+  }
+
+  td {
+    padding: 5px 8px;
+    border-bottom: 1px solid var(--border)88;
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  .key { color: var(--accent2); font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+
+  .divider {
+    grid-column: 1 / -1;
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--muted);
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 8px 0 4px;
+    border-top: 1px solid var(--border);
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>COMP 014 — Formula Cheat Sheet</h1>
+  <p>Quantitative Methods with Modeling and Simulation</p>
+</header>
+
+<div class="grid">
+
+  <!-- ── DESCRIPTIVE STATS ── -->
+  <div class="divider">📊 Descriptive Statistics</div>
+
+  <div class="card">
+    <div class="card-title purple">Measures of Location</div>
+    <div class="row">
+      <div class="formula-block">
+        <div class="formula-label">Arithmetic Mean</div>
+        <div class="formula">x̄ = Σx / n</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Median</div>
+        <div class="formula">Middle value when sorted</div>
+        <div class="note">Position = (n+1)/2</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Mode</div>
+        <div class="formula">Most frequently occurring value</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">Measures of Spread</div>
+    <div class="row">
+      <div class="formula-block teal">
+        <div class="formula-label">Range</div>
+        <div class="formula">Range = Max − Min</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Interquartile Range</div>
+        <div class="formula">IQR = Q3 − Q1</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Mean Absolute Deviation</div>
+        <div class="formula">MAD = Σ|x − x̄| / n</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Variance</div>
+        <div class="formula">σ² = Σ(x − x̄)² / n</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Standard Deviation</div>
+        <div class="formula">σ = √[Σ(x − x̄)² / n]</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INDEX NUMBERS ── -->
+  <div class="divider">📈 Index Numbers</div>
+
+  <div class="card">
+    <div class="card-title purple">Simple Index</div>
+    <div class="formula-block">
+      <div class="formula-label">Index for period n</div>
+      <div class="formula">Iₙ = (Vₙ / V₀) × 100</div>
+    </div>
+    <div class="formula-block">
+      <div class="formula-label">Rebasing (new index)</div>
+      <div class="formula">New Index = Old Index × constant</div>
+      <div class="note">constant = 100 / old index at new base period</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">Aggregate Indices</div>
+    <div class="row">
+      <div class="formula-block teal">
+        <div class="formula-label">Simple Aggregate Index</div>
+        <div class="formula">= (ΣPₙ / ΣP₀) × 100</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Mean Price Relative Index</div>
+        <div class="formula">= Σ(Pₙ/P₀ × 100) / number of items</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Base-Weighted (Laspeyres)</div>
+        <div class="formula">= (ΣQ₀Pₙ / ΣQ₀P₀) × 100</div>
+        <div class="note">Tends too HIGH — ignores substitution</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Current-Weighted (Paasche)</div>
+        <div class="formula">= (ΣQₙPₙ / ΣQₙP₀) × 100</div>
+        <div class="note">Tends too LOW — ignores past habits</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Other Weighted Index</div>
+        <div class="formula">= (Σw × Pₙ/P₀) / Σw × 100</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FINANCE & PERFORMANCE ── -->
+  <div class="divider">💰 Finance & Performance</div>
+
+  <div class="card">
+    <div class="card-title yellow">Financial Ratios</div>
+    <div class="row">
+      <div class="formula-block yellow">
+        <div class="formula-label">Profit Margin</div>
+        <div class="formula">= (Profit before tax & interest / Sales) × 100</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Return on Assets (ROA)</div>
+        <div class="formula">= (Net Profit + Interest + Tax) / Total Assets × 100</div>
+        <div class="note">= EBIT / Total Assets × 100</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Acid Test</div>
+        <div class="formula">= Liquid Assets / Liabilities</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Productivity</div>
+        <div class="formula">= Output / Input (per unit of resource)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title red">Break-Even Analysis</div>
+    <div class="row">
+      <div class="formula-block red">
+        <div class="formula-label">Revenue</div>
+        <div class="formula">R = N × P</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Total Cost</div>
+        <div class="formula">TC = F + N×C</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Break-Even Point</div>
+        <div class="formula">NP = F + NC  →  N* = F / (P − C)</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Profit (above BEP)</div>
+        <div class="formula">Profit = N(P − C) − F</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Loss (below BEP)</div>
+        <div class="formula">Loss = F − N(P − C)</div>
+      </div>
+    </div>
+    <div style="margin-top:10px">
+      <table>
+        <tr><th>Variable</th><th>Meaning</th></tr>
+        <tr><td class="key">N</td><td>Number of units</td></tr>
+        <tr><td class="key">P</td><td>Price per unit</td></tr>
+        <tr><td class="key">C</td><td>Variable cost per unit</td></tr>
+        <tr><td class="key">F</td><td>Fixed costs</td></tr>
+        <tr><td class="key">P−C</td><td>Contribution per unit</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title purple">Depreciation</div>
+    <div class="row">
+      <div class="formula-block">
+        <div class="formula-label">Straight-Line Depreciation (annual)</div>
+        <div class="formula">D = (Cost − Scrap Value) / Useful Life</div>
+        <div class="note">Fixed amount deducted each year</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Reducing-Balance Depreciation</div>
+        <div class="formula">BVₙ = BV₀ × (1 − r)ⁿ</div>
+        <div class="note">Fixed % of residual value each year</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">Time Value of Money</div>
+    <div class="row">
+      <div class="formula-block teal">
+        <div class="formula-label">Future Value (Compound Interest)</div>
+        <div class="formula">FV = PV × (1 + r)ⁿ</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Present Value (Discounting)</div>
+        <div class="formula">PV = FV / (1 + r)ⁿ</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Net Present Value</div>
+        <div class="formula">NPV = Σ PV(revenues) − Σ PV(costs)</div>
+        <div class="note">IRR = discount rate where NPV = 0</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REGRESSION ── -->
+  <div class="divider">📉 Regression & Forecasting</div>
+
+  <div class="card">
+    <div class="card-title purple">Linear Regression</div>
+    <div class="row">
+      <div class="formula-block">
+        <div class="formula-label">Line of Best Fit</div>
+        <div class="formula">y = a + bx</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Slope (b)</div>
+        <div class="formula">b = (nΣxy − ΣxΣy) / (nΣx² − (Σx)²)</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Intercept (a)</div>
+        <div class="formula">a = ȳ − b·x̄</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Multiple Regression</div>
+        <div class="formula">y = a + b₁x₁ + b₂x₂ + ... + bₙxₙ</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">Correlation & Error</div>
+    <div class="row">
+      <div class="formula-block teal">
+        <div class="formula-label">Coefficient of Determination</div>
+        <div class="formula">r² = Explained variation / Total variation</div>
+        <div class="note">Closer to 1 = better fit</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Spearman's Rank Correlation</div>
+        <div class="formula">rₛ = 1 − (6ΣD²) / (n(n²−1))</div>
+        <div class="note">D = difference in rankings, n = pairs</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Mean Squared Error</div>
+        <div class="formula">MSE = Σ(actual − forecast)² / n</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Mean Absolute Error</div>
+        <div class="formula">MAE = Σ|actual − forecast| / n</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title yellow">Forecasting Methods</div>
+    <div class="row">
+      <div class="formula-block yellow">
+        <div class="formula-label">Simple Average</div>
+        <div class="formula">F = Σx / n</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Moving Average (period n)</div>
+        <div class="formula">F = (x₁ + x₂ + ... + xₙ) / n</div>
+        <div class="note">Uses only last n observations</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Exponential Smoothing</div>
+        <div class="formula">Fₜ₊₁ = αXₜ + (1−α)Fₜ</div>
+        <div class="note">α = smoothing constant (0.1–0.2 typical)</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Seasonal Forecast (Multiplicative)</div>
+        <div class="formula">Forecast = Trend × Seasonal Index (S)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROBABILITY ── -->
+  <div class="divider">🎲 Probability & Distributions</div>
+
+  <div class="card">
+    <div class="card-title purple">Probability Rules</div>
+    <div class="row">
+      <div class="formula-block">
+        <div class="formula-label">Independent Events (AND)</div>
+        <div class="formula">P(A and B) = P(A) × P(B)</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Mutually Exclusive Events (OR)</div>
+        <div class="formula">P(A or B) = P(A) + P(B)</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Conditional Probability</div>
+        <div class="formula">P(A|B) = P(A and B) / P(B)</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Bayes' Theorem</div>
+        <div class="formula">P(A|B) = P(B|A)·P(A) / P(B)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">Probability Distributions</div>
+    <div class="row">
+      <div class="formula-block teal">
+        <div class="formula-label">Combinations (order doesn't matter)</div>
+        <div class="formula">ⁿCᵣ = n! / (r!(n−r)!)</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Permutations (order matters)</div>
+        <div class="formula">ⁿPᵣ = n! / (n−r)!</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Binomial — P(r successes in n trials)</div>
+        <div class="formula">P(r) = ⁿCᵣ × pʳ × (1−p)ⁿ⁻ʳ</div>
+        <div class="note">Use when: 2 outcomes, fixed p, independent trials</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Poisson — P(r events)</div>
+        <div class="formula">P(r) = e⁻λ × λʳ / r!</div>
+        <div class="note">Use when: n large, p small, λ = np</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Normal — Standardize</div>
+        <div class="formula">z = (x − μ) / σ</div>
+        <div class="note">Then read from z-table</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── SAMPLING & HYPOTHESIS ── -->
+  <div class="divider">🔬 Sampling & Hypothesis Testing</div>
+
+  <div class="card">
+    <div class="card-title red">Sampling</div>
+    <div class="row">
+      <div class="formula-block red">
+        <div class="formula-label">Standard Error of the Mean</div>
+        <div class="formula">SE = σ / √n</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Bessel's Correction (small samples)</div>
+        <div class="formula">s = √[Σ(x−x̄)² / (n−1)]</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Confidence Interval (mean)</div>
+        <div class="formula">x̄ ± z × (σ/√n)</div>
+        <div class="note">Use t instead of z for small samples (n&lt;30)</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Confidence Interval (proportion)</div>
+        <div class="formula">p ± z × √[p(1−p)/n]</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title yellow">Hypothesis Testing</div>
+    <div class="row">
+      <div class="formula-block yellow">
+        <div class="formula-label">Test Statistic (z or t)</div>
+        <div class="formula">z = (x̄ − μ) / (σ/√n)</div>
+        <div class="note">Use t-distribution when n &lt; 30; df = n−1</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Chi-Squared (goodness of fit)</div>
+        <div class="formula">χ² = Σ (O − E)² / E</div>
+        <div class="note">df = (rows−1)(cols−1) for contingency table</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Population Proportion SD</div>
+        <div class="formula">σₚ = √[p(1−p)/n]</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── DECISION MAKING ── -->
+  <div class="divider">🧠 Decision Making</div>
+
+  <div class="card">
+    <div class="card-title purple">Decision Criteria (No Probabilities)</div>
+    <div class="row">
+      <div class="formula-block">
+        <div class="formula-label">Laplace (equally likely)</div>
+        <div class="formula">Choose max of row averages</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Wald (maximin — pessimistic)</div>
+        <div class="formula">Choose best of worst outcomes per row</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Savage (minimax regret)</div>
+        <div class="formula">Regret = Best in column − Actual outcome</div>
+        <div class="note">→ Choose min of max regrets per row</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">Decision Making with Risk</div>
+    <div class="row">
+      <div class="formula-block teal">
+        <div class="formula-label">Expected Value</div>
+        <div class="formula">EV = Σ P(outcome) × value</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Decision Tree — Random Node</div>
+        <div class="formula">EV = Σ (probability × node value)</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Decision Tree — Decision Node</div>
+        <div class="formula">Choose branch with highest EV</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── INVENTORY ── -->
+  <div class="divider">📦 Inventory Management</div>
+
+  <div class="card">
+    <div class="card-title red">Economic Order Quantity (EOQ)</div>
+    <div class="row">
+      <div class="formula-block red">
+        <div class="formula-label">EOQ Formula</div>
+        <div class="formula">Q* = √(2DC / H)</div>
+        <div class="note">D = annual demand, C = order cost, H = holding cost per unit/year</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Cycle Length</div>
+        <div class="formula">T = Q* / D</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Reorder Level (constant demand)</div>
+        <div class="formula">ROL = Lead Time × Daily Demand</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Reorder Level (with safety stock)</div>
+        <div class="formula">ROL = Lead Time Demand + Safety Stock</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── PROJECT MANAGEMENT ── -->
+  <div class="divider">🗂 Project Management (PERT/CPM)</div>
+
+  <div class="card">
+    <div class="card-title purple">Network Analysis</div>
+    <div class="row">
+      <div class="formula-block">
+        <div class="formula-label">Earliest Finish Time</div>
+        <div class="formula">EFT = EST + Duration</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Latest Start Time</div>
+        <div class="formula">LST = LFT − Duration</div>
+      </div>
+      <div class="formula-block">
+        <div class="formula-label">Total Float</div>
+        <div class="formula">Float = LST − EST  (or LFT − EFT)</div>
+        <div class="note">Float = 0 → Critical path activity</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title teal">PERT (Rule of Sixths)</div>
+    <div class="row">
+      <div class="formula-block teal">
+        <div class="formula-label">Expected Duration</div>
+        <div class="formula">te = (O + 4M + P) / 6</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Variance of Duration</div>
+        <div class="formula">σ² = ((P − O) / 6)²</div>
+      </div>
+      <div class="formula-block teal">
+        <div class="formula-label">Project Mean & Variance</div>
+        <div class="formula">Sum te and σ² along critical path</div>
+        <div class="note">O=optimistic, M=most likely, P=pessimistic</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUALITY ── -->
+  <div class="divider">✅ Quality Control</div>
+
+  <div class="card">
+    <div class="card-title yellow">Process Control (p-chart)</div>
+    <div class="row">
+      <div class="formula-block yellow">
+        <div class="formula-label">Mean Proportion Defective</div>
+        <div class="formula">p̄ = total defects / total inspected</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Upper Control Limit (UCL)</div>
+        <div class="formula">UCL = p̄ + 3√[p̄(1−p̄)/n]</div>
+      </div>
+      <div class="formula-block yellow">
+        <div class="formula-label">Lower Control Limit (LCL)</div>
+        <div class="formula">LCL = p̄ − 3√[p̄(1−p̄)/n]</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── QUEUING ── -->
+  <div class="card">
+    <div class="card-title red">Queuing Theory (Single Server)</div>
+    <div class="row">
+      <div class="formula-block red">
+        <div class="formula-label">Traffic Intensity (utilization)</div>
+        <div class="formula">ρ = λ / μ</div>
+        <div class="note">λ = arrival rate, μ = service rate; must have ρ &lt; 1</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Mean Queue Length</div>
+        <div class="formula">Lq = ρ² / (1 − ρ)</div>
+      </div>
+      <div class="formula-block red">
+        <div class="formula-label">Mean Time in System</div>
+        <div class="formula">W = 1 / (μ − λ)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY LEGEND -->
+  <div class="card full-width" style="background:#111118; border-color: var(--accent1)44;">
+    <div class="card-title purple">Key Variable Reference</div>
+    <table>
+      <tr>
+        <th>Symbol</th><th>Meaning</th>
+        <th>Symbol</th><th>Meaning</th>
+        <th>Symbol</th><th>Meaning</th>
+      </tr>
+      <tr>
+        <td class="key">x̄ / μ</td><td>Mean</td>
+        <td class="key">σ / s</td><td>Std. deviation</td>
+        <td class="key">n</td><td>Sample / count</td>
+      </tr>
+      <tr>
+        <td class="key">P₀ / Pₙ</td><td>Base / current price</td>
+        <td class="key">Q₀ / Qₙ</td><td>Base / current qty</td>
+        <td class="key">w</td><td>Weight</td>
+      </tr>
+      <tr>
+        <td class="key">r</td><td>Interest rate / correlation</td>
+        <td class="key">α</td><td>Smoothing constant</td>
+        <td class="key">λ</td><td>Poisson mean / arrival rate</td>
+      </tr>
+      <tr>
+        <td class="key">O/M/P</td><td>Optimistic/Most likely/Pessimistic</td>
+        <td class="key">D</td><td>Annual demand</td>
+        <td class="key">H/C</td><td>Holding / Order cost</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+</body>
+</html>
